@@ -36,7 +36,7 @@ proposed in our [manuscript](https://web.stanford.edu/~boyd/papers/os_bundle_dis
 * CVXPY
 * numpy 
 
-To install `osbdo` 1) clone the repo, 2) from inside the directory run 
+To install `osbdo` 1) clone the repo, 2) activate a python virtual environment, 3) run 
 ```python3
 python setup.py install
 ```
