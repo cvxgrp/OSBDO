@@ -2,7 +2,6 @@
 *.csv
 *.png
 *.pdf
-*.txt
 
 
 # Byte-compiled / optimized / DLL files
@@ -135,6 +134,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .ipynb_checkpoint
-.*
 !/.gitignore
 **/__pycache__

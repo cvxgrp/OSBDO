@@ -16,7 +16,8 @@ setup(
     install_requires=[
         "numpy >= 1.22.2",
         "scipy >= 1.8.0",
-        "cvxpy >= 1.2.0"],
+        "cvxpy >= 1.2.0",
+        "matplotlib >= 1.16.0"],
     url="https://github.com/cvxgrp/osbdo",
     classifiers=[
         "Programming Language :: Python :: 3",
