@@ -1,11 +1,11 @@
 name: Main Test
-on: [push]
-#    pull_request:
-#    push:
-#        branches:
-#            - master
-#        tags:
-#          - '*'
+on:
+    pull_request:
+    push:
+        branches:
+            - master
+        tags:
+          - '*'
 jobs:
     run-tests:
         runs-on: ubuntu-latest
