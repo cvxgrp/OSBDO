@@ -1,0 +1,44 @@
+{% set name = "OSBDO" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: {{ environ.get('VERSION_FROM_GIT_TAG') }}
+
+source:
+  git_url: https://github.com/cvxgrp/OSBDO
+
+build:
+  noarch: python
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --ignore-installed -vv "
+
+requirements:
+  host:
+    - pip
+    - python >=3.8
+    - numpy >= 1.22.2
+    - scipy >= 1.8.0
+    - cvxpy >= 1.2.0
+    - matplotlib >= 1.16.0
+
+  run:
+    - pip
+    - python >=3.8
+    - numpy >= 1.22.2
+    - scipy >= 1.8.0
+    - cvxpy >= 1.2.0
+    - matplotlib >= 1.16.0
+
+about:
+  home: https://github.com/cvxgrp/OSBDO
+  license: GPLv3
+  license_family: GPL
+  license_file:
+  summary: Oracle-Structured Bundle Distributed Optimization
+  doc_url:
+  dev_url:
+
+extra:
+  recipe-maintainers:
+    - parshakova
+    - Thistleman
