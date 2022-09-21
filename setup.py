@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="osbdo",
-    version="0.0.1",
+    version="0.0.3",
     packages=["osbdo"],
     license="GPLv3",
     description="Oracle-Structured Bundle Distributed Optimization",
