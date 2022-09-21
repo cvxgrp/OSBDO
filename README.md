@@ -32,14 +32,16 @@ In this repository we provide an implementation of the bundle-type method
 proposed in our [manuscript](https://web.stanford.edu/~boyd/papers/os_bundle_distr_opt.html).
 
 ## Installation
-* python 3.8
-* CVXPY
-* numpy 
-
-To install `osbdo` 1) clone the repo, 2) activate a python virtual environment, 3) run 
-```python3
-python setup.py install
+OSBDO is available on the Python Package Index, use
 ```
+pip install osbdo
+```
+Requirements
+* python >= 3.8
+* CVXPY >= 1.2.0
+* numpy >= 1.22.2
+* matplotlib >= 1.16.0
+* scipy >= 1.8.0
 
 ## Getting started
 
