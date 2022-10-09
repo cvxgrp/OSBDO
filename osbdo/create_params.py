@@ -208,9 +208,7 @@ def ra_params(num_resources, num_agents, num_participants):
     participants_params = [0]*num_participants
     for i in range(num_participants):
         A = np.random.uniform(size=(5,num_resources))
-        B = copy.deepcopy(A)
-        B[:,resource_list[i]] = 0
-        A = A - B
+        A[:,resource_list[i]] = 0
         participants_params[i] = {'A': A,
                      'b': (num_resource_per_participant)*np.random.uniform(size=(5,)),
                       }

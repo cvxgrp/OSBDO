@@ -73,6 +73,9 @@ class Preconditioner:
             return x
         return np.multiply(1/(self.upb[i]-self.lwb[i]) , x)
 
+
+
+
 """
 Distributed optimization problem class
 """
@@ -122,7 +125,8 @@ class Problem:
         mid_point = np.zeros(self.x.shape)
         for i in range(self.M):
             if self.agents[i].upb is None or self.agents[i].lwb is None:
-                 mid_point[self.agent_varidx[i][0]:self.agent_varidx[i][1]] = np.zeros(self.agent_varidx[i][1]-self.agent_varidx[i][0])
+                 mid_point[self.agent_varidx[i][0]:self.agent_varidx[i][1]] = \
+                                            np.zeros(self.agent_varidx[i][1]-self.agent_varidx[i][0])
             else:
                 mid_point[self.agent_varidx[i][0]:self.agent_varidx[i][1]] = \
                             self.cond.agent_to_solver(x=(self.agents[i].upb+self.agents[i].lwb)/2, i=i)
@@ -226,14 +230,14 @@ class Problem:
         return hat_h.value, rho
 
 
-    def solve(self, *, memory=np.inf, rel_gap=10**(-2), abs_gap=10**(-3), max_iter=100, solver='ECOS', agent_reply_pattern=None):
+    def solve(self, *, memory=np.inf, rel_gap=10**(-2), abs_gap=10**(-3), max_iter=100, \
+                                                            solver='ECOS', agent_reply_pattern=None):
         rhos = []
         self.lower_bnd = [-np.inf]
         self.upper_bnd = [np.inf]
         U = np.inf; L = -np.inf
         agents = self.agents 
         g = self.g 
-        x_array = []
         
         # construct parameters
         k = 0
@@ -242,7 +246,6 @@ class Problem:
 
         # Initialization: x_0, init_minorant hat_fis,initialize hat_f, hat_h, h_x
         x =  self.get_init_feasible(solver=solver)
-        x_array.append(x)
         
         hat_fis = [0] * M
         for i in range(M):
@@ -263,7 +266,8 @@ class Problem:
         hat_h = self.update_hat_h(hat_fis)  
         
         # evaluate h(x_0)
-        h_x, _ = self.get_f_x(x = x, solver=solver)
+        f_x, _ = self.get_f_x(x = x, solver=solver)
+        h_x = f_x + g.function.value
       
         # iterative solve
         while  (((U-L) >= abs_gap) and ((U-L)>=rel_gap * min(np.abs(U),np.abs(L)) or U*L<=0) and (k < max_iter)):
@@ -315,7 +319,6 @@ class Problem:
                 if  h_x - h_tilde_x >= eta * delta: 
                     x = tilde_x
                     h_x = h_tilde_x
-                x_array.append(x)
                 
             ## step 5 Update agent minorants \hat f_i = max(\hat f_i, f_i + qi^T (x_i - tilde_x_i))
             for i in range(M):
@@ -335,4 +338,5 @@ class Problem:
         for i in range(M):
             agent_x.append(self.cond.solver_to_agent_np(x=self.slicing(x=x, i=i), i=i))
         x_global = np.hstack(agent_x)
+        self.hat_h = hat_h
         return agent_x, x_global
