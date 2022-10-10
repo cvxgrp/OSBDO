@@ -204,7 +204,10 @@ class Problem:
     
     def get_proj_sublev_val(self, *, hat_h, x_k, L, U, solver, ratio = 0.5, verbose=False):
         prox_term = cp.sum(cp.sum_squares(self.x  - x_k))
-        sublev_set = [ hat_h <= ratio * U + (1 - ratio) * L ] 
+        if L > -np.inf:
+            sublev_set = [ hat_h <= ratio * U + (1 - ratio) * L ] 
+        else:
+            sublev_set = [ hat_h <= U ]
         status = None
         while status != 'optimal':
             try:
