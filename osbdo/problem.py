@@ -258,7 +258,7 @@ class Problem:
             # create minorants and variables for finite memory 
             for i in  range(M): 
                 vars_memory[i] = {}
-                vars_memory[i]["init"]    = copy.deepcopy(hat_fis[i])
+                vars_memory[i]["init"]    = copy.copy(hat_fis[i])
                 vars_memory[i]["shifts"]  = np.zeros((memory))
                 vars_memory[i]["normals"] = np.zeros((memory, agents[i].dim))   
 
