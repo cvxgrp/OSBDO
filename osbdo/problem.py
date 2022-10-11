@@ -1,6 +1,5 @@
 import numpy as np
 import cvxpy as cp
-import copy
 
 from osbdo.utils import *
 
@@ -251,17 +250,16 @@ class Problem:
         x =  self.get_init_feasible(solver=solver)
         
         hat_fis = [0] * M
-        for i in range(M):
-            hat_fis[i] = agents[i].get_init_minorant()
-        
         vars_memory = [0] * M
         agent_update_time = [0]*M
         self.agent_fail = [True]*M
-        if memory < np.inf:
-            # create minorants and variables for finite memory 
-            for i in  range(M): 
+        
+        for i in  range(M): 
+            hat_fis[i] = agents[i].get_init_minorant()
+            if memory < np.inf:
+                # create minorants and variables for finite memory
                 vars_memory[i] = {}
-                vars_memory[i]["init"]    = copy.copy(hat_fis[i])
+                vars_memory[i]["init"]    = agents[i].get_init_minorant()
                 vars_memory[i]["shifts"]  = np.zeros((memory))
                 vars_memory[i]["normals"] = np.zeros((memory, agents[i].dim))   
 
