@@ -92,5 +92,9 @@ Please consult our [manuscript](https://web.stanford.edu/~boyd/papers/os_bundle_
 for the details of mentioned problems and their oracle-structured form. 
 
 ### Extra example
-We also use our method for finding the intersection of the convex sets. 
+We use our method for finding the intersection of the convex sets. 
 * [intersection of convex sets](https://github.com/cvxgrp/OSBDO/tree/main/examples/intersection_cvx_sets)
+
+
+We also check the performance of OSBDO when applied to the action directed Walrasian equilibrium (over the primal variables) and price directed Walrasian equilibrium (over the dual variable).
+* [Walrasian equilibrium](https://github.com/cvxgrp/OSBDO/blob/main/examples/walrasian_equilibrium/walrasian_equilibrium.ipynb)
