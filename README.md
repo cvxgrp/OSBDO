@@ -98,3 +98,16 @@ We use our method for finding the intersection of the convex sets.
 
 We also check the performance of OSBDO when applied to the action directed Walrasian equilibrium (over the primal variables) and price directed Walrasian equilibrium (over the dual variable).
 * [Walrasian equilibrium](https://github.com/cvxgrp/OSBDO/blob/main/examples/walrasian_equilibrium/walrasian_equilibrium.ipynb)
+
+# Citing
+If you use OSBDO please cite the associated paper. 
+```
+@article{parshakova2022oraclestructured,
+      title={An Oracle-Structured Bundle Method for Distributed Optimization}, 
+      author={Tetiana Parshakova and Fangzhao Zhang and Stephen Boyd},
+      year={2022},
+      eprint={2211.01418},
+      archivePrefix={arXiv},
+      primaryClass={math.OC}
+}
+```
