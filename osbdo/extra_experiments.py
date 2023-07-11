@@ -154,7 +154,6 @@ def vars_memory_to_matrix(self, *, k, memory, vars_memory, q0, shift0):
 
 def solve_var_metric(self, *, memory=np.inf, rel_gap=10**(-2), abs_gap=10**(-3), max_iter=100, solver='ECOS', \
             agent_reply_pattern=None, minorant_update='agg_lin', print_freq=1, poorman=True):
-    
     self.lower_bnd = [-np.inf]
     self.upper_bnd = [np.inf]
     U = np.inf; L = -np.inf
@@ -299,7 +298,6 @@ def operator_doubly_stabilized(self, *, hat_h, x_k, tau_k, l_k, solver):
     prox_term = (1./(2*tau_k)) * cp.sum_squares(self.x - x_k)
     constraints = [hat_h <= r, r <= l_k] + self.g.domain
     prob = cp.Problem(cp.Minimize(r + prox_term), constraints)
-
     try:
         prob.solve(solver=solver)
     except:
@@ -444,7 +442,6 @@ def solve_doubly_stabilized(self, *, ds_params, memory=np.inf, rel_gap=10**(-2),
     x_global = np.hstack(agent_x)
     self.hat_h = hat_h
     return agent_x, x_global
-
 
 
 def add_extra_methods_to_problem(prob):

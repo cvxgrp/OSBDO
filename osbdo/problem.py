@@ -214,25 +214,6 @@ class Problem:
                 minorant = cp.max(vars_memory["normals"] @ xi + vars_memory["shifts"])
             hat_fi_exp = cp.maximum(vars_memory["init"], minorant)
         return hat_fi_exp, vars_memory
-    
-
-    def update_minorant_dropping_constraints(self, *, affine_minorant, hat_fi, i, memory=np.inf, vars_memory={}, k=None):
-        xi = cp.vec(self.slicing(x=self.x, i=i))
-        xi_k = cp.vec(affine_minorant.x)
-        qi_k = cp.vec(affine_minorant.q)
-        fi_k = affine_minorant.f
-        if memory == np.inf:
-            hat_fi_exp = cp.maximum(hat_fi, cp.sum(fi_k + qi_k @ (xi - xi_k)))
-        else:           
-            old_idx = (k - 1) % memory 
-            vars_memory["normals"][old_idx] = qi_k.value
-            vars_memory["shifts"][old_idx] = (fi_k - qi_k @ xi_k).value
-            if k < memory:
-                minorant = cp.max(vars_memory["normals"][:k] @ xi + vars_memory["shifts"][:k])
-            else:
-                minorant = cp.max(vars_memory["normals"] @ xi + vars_memory["shifts"])
-            hat_fi_exp = cp.maximum(vars_memory["init"], minorant)
-        return hat_fi_exp, vars_memory
 
 
     def get_f_x(self, *, x, solver, agent_reply_pattern=None, k=None):
@@ -296,8 +277,6 @@ class Problem:
         g = self.g 
         if minorant_update == 'agg_lin':
             func_update_minorant = self.update_minorant_agg_linearization
-        elif minorant_update == 'drop_constr':
-            func_update_minorant = self.update_minorant_dropping_constraints
         
         # construct parameters
         k = 0
