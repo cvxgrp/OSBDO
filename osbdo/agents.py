@@ -43,8 +43,10 @@ class OptimalTransport(Agent):
         u = cp.Variable((self.dim, ), nonneg=True)
         r = cp.Variable((self.dim, ))
         constraints = [ u - r == v, \
-                        cp.hstack([cp.sum(X, axis=0), cp.sum(X, axis=1)]) == u,\
-                        u <= self.upb, u >= self.lwb, \
+                        cp.hstack([cp.sum(X, axis=0), 
+                                   cp.sum(X, axis=1)]) == u,\
+                        u <= self.upb, 
+                        u >= self.lwb, \
                         cp.sum(u[:self.m]) == cp.sum(u[self.m:]) ]
         if self.cap.sum() < np.inf: constraints += [X <= self.cap]
         if self.norm == "l2":
@@ -57,13 +59,14 @@ class OptimalTransport(Agent):
         try:
             prob.solve(solver=solver)
         except:
-            print('solver fails, change to OSQP')
+            # print('solver fails, change to OSQP')
             prob.solve(solver='OSQP')
         x = v; f = f.value
         q = -constraints[0].dual_value
         return Point(x=x, q=q, f=f)
 
     def get_init_minorant(self):
+        self.lwb_const = 0
         return cp.Constant(0)
 
 
@@ -88,13 +91,14 @@ class CommodityFlowRoute(Agent):
         prob = cp.Problem(cp.Minimize(f), constraints)
         prob.solve(solver=solver, verbose=verbose)
         if prob.status == "infeasible": 
-            print("# MCF infeasible" )
+            # print("# MCF infeasible" )
             prob.solve(solver='OSQP', verbose=verbose)
         f = f.value
         q = -constraints[0].dual_value
         return Point(x=v, q=q, f=f)
 
-    def get_init_minorant(self):                                
+    def get_init_minorant(self):  
+        self.lwb_const = self.init_lwb                              
         return cp.Constant(self.init_lwb)
 
    
@@ -131,6 +135,7 @@ class ResourceAllocation(Agent):
         lwb = 0
         for i in range(len(self.b_list)):
             lwb += - stats.mstats.gmean(self.A_list[i] @ self.upb + self.b_list[i], axis=None)
+        self.lwb_const = lwb
         return cp.Constant(lwb)
         
         
@@ -149,6 +154,7 @@ class FederatedLearning(Agent):
         return Point(x = v, q = q, f = f.sum())
         
     def get_init_minorant(self):
+        self.lwb_const = 0
         return cp.Constant(0)
        
 ############### Agent for Intersection of Convex Sets Problem ##################
@@ -175,6 +181,7 @@ class DistanceToSet(Agent):
         return Point(x = v, q = q, f = f)
     
     def get_init_minorant(self):
+        self.lwb_const = 0
         return cp.Constant(0)
 
 
@@ -195,6 +202,7 @@ class AffineAgent(Agent):
         var = cp.Variable(self.dim)
         prob = cp.Problem(cp.Minimize(self.c.T@var+self.d),[var<=self.upb, var>=self.lwb])
         prob.solve()
+        self.lwb_const = prob.value
         return cp.Constant(prob.value)
 
             
@@ -215,4 +223,5 @@ class QuadraticAgent(Agent):
         prob = cp.Problem(cp.Minimize(0.5*cp.quad_form(var,self.P)+self.q.T@var+self.r),\
                                                                     [var<=self.upb, var>=self.lwb])
         prob.solve()
+        self.lwb_const = prob.value
         return cp.Constant(prob.value)

@@ -26,7 +26,7 @@ def sc_params(ms, ns):
     for i, (m, n) in enumerate(zip(ms, ns)):
         lin, quad, cap = generate_costs(n, m)
         idx = i + 1
-        params[idx] = {"cap":cap, "lin":lin, "quad":quad, "dimension": m+n, "m":m, "n":n, "norm":"l1"}
+        params[idx] = {"cap":cap, "lin":lin, "quad":quad, "dimension": m + n, "m":m, "n":n, "norm":"l1"}
     for i, (m, n) in enumerate(zip(ms, ns)):
         idx = i + 1
         if N-1 > idx > 0:
@@ -61,7 +61,7 @@ def sc_agents(params):
 
 def sc_coupling(params, agents):
     obj = 0
-    obj += cp.sum(params[0]["sale"].T @ agents[0].x[:params[0]['dimension']])
+    obj +=    cp.sum(params[0]["sale"].T @ agents[0].x[:params[0]['dimension']])
     obj +=  - cp.sum(params[-1]["retail"].T @ agents[-1].x[- params[-1]['dimension']:])
     
     domain = []
@@ -69,9 +69,10 @@ def sc_coupling(params, agents):
     params = params[1:-1]
     for i in range(N):
         m, n = params[i]["m"], params[i]["n"]
-        if i<N-1:
-#             print(f'{i=},{m=},{agents[i].x[m:].shape=},{agents[i+1].x[:m].shape=}')
+        if i < N-1:
+            # condition on input/output flows, ie, a_i = b_{i-1}
             domain += [agents[i].x[-n:] == agents[i+1].x[:n]]
+        # condition for flow conservation
         domain += [cp.sum(agents[i].x[:m]) == cp.sum(agents[i].x[m:])]
     
     g = Coupling(agents=agents, function= obj, domain = domain)

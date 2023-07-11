@@ -4,18 +4,9 @@ import cvxpy as cp
 from osbdo.utils import *
 
 
-############################# Find true solution for Supply chain problem #########################
+############################# Find true solution for Supply chain problem ##########################
 
-def cvx_supply_chain(*, params, norm="l1", x_val=None):
-    """
-    params: parameters for OT agents
-
-    Returns the true solution to the distributed optimization problem
-    of  Optimal Transport using CVXPY and  centralised formulation
-        min. \sum_i  f_i(xi)
-        s.t. Ax = b,
-             Cx <= d   
-    """
+def sc_data_matrix_format(params):
     N = len(params)
     x_size = sum([params[i]["dimension"] for  i in range(1, N-1)])
     A = [] 
@@ -38,6 +29,25 @@ def cvx_supply_chain(*, params, norm="l1", x_val=None):
     b = np.zeros((A.shape[0], ))
     l = np.concatenate(l_all, axis=0)
     u = np.concatenate(u_all, axis=0)
+    grad_g_val = np.concatenate([params[0]["sale"].flatten(), \
+        np.zeros(A.shape[1] - (params[0]["dimension"] + params[-1]["dimension"])), -params[-1]["retail"].flatten()], axis=0)
+    return A, b, l, u, idx, grad_g_val
+
+
+
+def cvx_supply_chain(*, params, norm="l1", x_val=None):
+    """
+    params: parameters for OT agents
+
+    Returns the true solution to the distributed optimization problem
+    of  Optimal Transport using CVXPY and  centralised formulation
+        min. \sum_i  f_i(xi)
+        s.t. Ax = b,
+             Cx <= d   
+    """
+    N = len(params)
+    x_size = sum([params[i]["dimension"] for  i in range(1, N-1)])
+    A, b, l, u, idx = sc_data_matrix_format(params)[:5]
     idx = [params[0]['dimension'] - 1] + idx + [params[-1]['dimension']]
     
     mu = get_mus(50, params[1:-1], N-2)
@@ -64,7 +74,7 @@ def cvx_supply_chain(*, params, norm="l1", x_val=None):
     obj = f + cp.sum(params[0]["sale"].T @ z[:params[0]['dimension']])-cp.sum(params[-1]["retail"].T @ z[- params[-1]['dimension']:])
     if x_val is not None:
         constraints += [z ==  x_val] 
-    constraints += [A@z==b, z<=u, z>=l]
+    constraints += [A @ z == b, z <= u, z >= l]
     prob = cp.Problem(cp.Minimize(obj), constraints)
     prob.solve(solver='ECOS')
     return obj.value, z.value, prob 
