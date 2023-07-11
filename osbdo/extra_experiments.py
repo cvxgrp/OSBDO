@@ -446,7 +446,6 @@ def solve_doubly_stabilized(self, *, ds_params, memory=np.inf, rel_gap=10**(-2),
     return agent_x, x_global
 
 
-
 def add_extra_methods_to_problem(prob):
     prob.matvec_slicing = types.MethodType(matvec_slicing, prob)
     prob.operator_prox_minorant = types.MethodType(operator_prox_minorant, prob)

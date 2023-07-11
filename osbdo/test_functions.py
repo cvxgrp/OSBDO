@@ -138,3 +138,4 @@ def test_curve_search(delta_t, e_t, hat_e_t, solver, h_x, h_tilde_x, var_x, x, m
         
         assert delta_t >= -1e-8 and e_t >= -1e-8 and hat_e_t >= -1e-8,\
             print(delta_t, e_t, hat_e_t)
+            
