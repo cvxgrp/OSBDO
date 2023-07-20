@@ -1,6 +1,7 @@
  # Oracle-Structured Bundle Distributed Optimization (OSBDO)
  
-This repository accompanies the manuscript [An Oracle-Structured Bundle Method for Distributed Optimization](https://web.stanford.edu/~boyd/papers/os_bundle_distr_opt.html).
+This repository accompanies the manuscript [Implementation of an Oracle-Structured Bundle 
+Method for Distributed Optimization](https://web.stanford.edu/~boyd/papers/os_bundle_distr_opt.html).
 
 We consider the optimization problem
 ```math
